@@ -18,12 +18,15 @@ const navigations: NavLinkData[] = [
   {
     name: "Generator",
     path: "/generatorPage"
+  },
+  {
+    name: "Profile",
+    path: "/userProfile"
   }
 ];
 
 //Styling and linking
-const NavLink = ({ name, path }: NavLinkData) => {
-  // const { pathname: currentPath } = useRouter();
+const NavLink = ({ name, path }: NavLinkData) => {  
   return (
     <NextLink key={path} href={path} passHref legacyBehavior>
       <Link _hover={{ textDecoration: "none" }} tabIndex={-1}>
@@ -53,7 +56,7 @@ const Navbar = ({showLogin}:Prop) => {
         <HStack justifyContent={"space-between"}>
           <HStack h={14} as="nav" spacing={14} alignItems="center">
             {navigations.map((data) => (
-              <NavLink key={data.path} {...data} />
+              data.name == "Profile" && !user ? null : <NavLink key={data.path}{...data}/>
             ))}
           </HStack>
         </HStack>

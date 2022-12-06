@@ -30,10 +30,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/addSong": [
+    "/userProfile": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/addSong.js"
+      "static/chunks/pages/userProfile.js"
     ]
   },
   "ampFirstPages": []
