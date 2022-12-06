@@ -16,8 +16,8 @@ const navigations: NavLinkData[] = [
     path: "/",
   },
   {
-    name:"Generator",
-    path:"/generatorPage"
+    name: "Generator",
+    path: "/generatorPage"
   }
 ];
 
