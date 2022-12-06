@@ -24,7 +24,7 @@ const [Name, Artist, Genre, User, Likes] = out;
 
 const Laysong = ({ name, artist, genre, user, link, likes }: Song) => {
   return (
-    <Tr>
+    <Tr key={name+artist+user.name}>
       <Td>
         <Link href={link} isExternal>
           {name}
