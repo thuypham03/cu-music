@@ -3,6 +3,7 @@ import { Box, Button, HStack, Link, Text, Flex, Spacer, Image } from "@chakra-ui
 import { useRouter } from "next/router";
 import { signInWithGoogle } from '../util/firebase';
 import { useAuth } from "../Components/auth/AuthUserProvider";
+import { addNewUser } from "../Components/AddUser";
 
 type NavLinkData = {
   name: string;
@@ -49,6 +50,7 @@ type Prop={
 
 const Navbar = ({showLogin}:Prop) => {
   const { user, signOut } = useAuth()
+  if (user) addNewUser(user.uid, user.displayName)
 
   return (
     <Flex shadow="base">

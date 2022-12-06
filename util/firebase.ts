@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore"
 import {
   getAuth,
   GoogleAuthProvider,
@@ -23,6 +23,8 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 
 const db = getFirestore(app)
 const auth = getAuth(app)
+const songsCollectionRef = collection(db, 'songs')
+const usersCollectionRef = collection(db, 'users')
 
 const providers = {
   googleProvider: new GoogleAuthProvider(),
@@ -44,6 +46,8 @@ const signOutFirebase = () => {
 export {
   db,
   auth,
+  songsCollectionRef,
+  usersCollectionRef,
   createComponentWithAuth,
   signInWithGoogle,
   signOutFirebase as signOut,
