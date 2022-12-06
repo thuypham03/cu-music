@@ -19,10 +19,6 @@ const AddSong = ()=>{
             >
                 Add Song
             </Button>
-            
-            <Link href='/'>
-            </Link>
-
         </Center>
     )
 }
