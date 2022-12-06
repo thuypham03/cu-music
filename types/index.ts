@@ -7,9 +7,6 @@ export type Song = {
     likes: number
 }
 
-
-
-
 export type User = {
     name:string
     id:number

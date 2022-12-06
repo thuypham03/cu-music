@@ -1,10 +1,15 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
+import AuthUserProvider from '../Components/auth/AuthUserProvider';
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
-      <Component {...pageProps} />
+      <AuthUserProvider>
+        <Component {...pageProps} />
+      </AuthUserProvider>
     </ChakraProvider>
   );
 }
+
+export default App;
