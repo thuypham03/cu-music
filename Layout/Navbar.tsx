@@ -1,7 +1,9 @@
 import NextLink from "next/link";
 import { Box, Button, HStack, Link, Text, Flex, Spacer, Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import Login from '../Components/Login'
+import { signInWithGoogle } from '../util/firebase';
+import { useAuth } from "../Components/auth/AuthUserProvider";
+import { addNewUser } from "../Components/AddUser";
 
 type NavLinkData = {
   name: string;
@@ -15,14 +17,17 @@ const navigations: NavLinkData[] = [
     path: "/",
   },
   {
-    name:"Generator",
-    path:"/generatorPage"
+    name: "Generator",
+    path: "/generatorPage"
+  },
+  {
+    name: "Profile",
+    path: "/userProfile"
   }
 ];
 
 //Styling and linking
-const NavLink = ({ name, path }: NavLinkData) => {
-  // const { pathname: currentPath } = useRouter();
+const NavLink = ({ name, path }: NavLinkData) => {  
   return (
     <NextLink key={path} href={path} passHref legacyBehavior>
       <Link _hover={{ textDecoration: "none" }} tabIndex={-1}>
@@ -39,32 +44,43 @@ const NavLink = ({ name, path }: NavLinkData) => {
   );
 };
 
-//
 type Prop={
   showLogin:boolean
 }
 
 const Navbar = ({showLogin}:Prop) => {
+  const { user, signOut } = useAuth()
+  if (user) addNewUser(user.uid, user.displayName)
+
   return (
     <Flex shadow="base">
-      <Box px={4} >
+      <Box px={10} >
         <HStack justifyContent={"space-between"}>
           <HStack h={14} as="nav" spacing={14} alignItems="center">
             {navigations.map((data) => (
-              <NavLink key={data.path} {...data} />
+              data.name == "Profile" && !user ? null : <NavLink key={data.path}{...data}/>
             ))}
-            {showLogin?<Login />:<></>}
           </HStack>
         </HStack>
       </Box>
       <Spacer />
 
-      <Box alignSelf='flex-end' px={20}>
-      <HStack justifyContent={"space-between"}>
-          <HStack h={14} as="nav" spacing={4} alignItems="center">
-            <Image boxSize="40px" borderRadius="full" src="cornell-logo.png" alt="User Image" />
-            <Text>Username</Text>
-          </HStack>
+      <Box alignSelf='flex-end' px={10}>
+      <HStack justifyContent={"space-between"} h={14} as="nav" spacing={4} alignItems="center">
+          {user && <>
+            <HStack>
+              <Image boxSize="40px" borderRadius="full" src="cornell-logo.png" alt="User Image" />
+              <Text>{user.displayName}</Text>
+            </HStack>
+          </>}
+          <Button
+            _focusVisible={{ shadow: "outline" }}
+            _focus={{ shadow: "none" }}
+            colorScheme={"facebook"}
+            onClick={user ? signOut : signInWithGoogle}
+          >
+            {user ? "Sign Out" : "Sign In"}
+          </Button>
         </HStack>
       </Box>
     </Flex>
