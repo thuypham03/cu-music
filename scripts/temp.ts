@@ -36,7 +36,7 @@ export const dummySongs:Song[] = [
         genre:'t3',
         user: dummyUsers[0],
         link:"https://youtu.be/lpiB2wMc49g",
-        likes:1
+        likes:5
     },
     {
         name:"song8",
@@ -56,4 +56,6 @@ export const dummySongs:Song[] = [
     }
 ]
 
+ export const currUser:User=dummyUsers[1]
+currUser.likedSongs = [dummySongs[0], dummySongs[2]]
 
