@@ -1,21 +1,22 @@
-export type Song = {
-    name:string
-    artist:string
-    genre:string
-    user:User
-    link:string
+export type PrimitiveSong = {
+    name: string
+    artist: string
+    genre: string
+    userId: string
+    link: string
     likes: number
 }
 
-
-
+export type Song = PrimitiveSong & { id:string
+    
+}
 
 export type User = {
-    name:string
-    id:number
-    uploads:Song[]
-    likes:number
-    likedSongs:Song[]
+    id: string // user.uid of AuthUser
+    name: string // user.displayName of AuthUser
+    uploads: Song[]
+    likes: number
+    likedSongs: string[]
     followers: User[]
     following: User[]
 }

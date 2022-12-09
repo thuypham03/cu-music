@@ -46,7 +46,7 @@ const Artist = ({ listState, setList, reverse }: testP) => {
   );
 };
 
-const User = ({ listState, setList, reverse }: testP) => {
+const Uploader = ({ listState, setList, reverse }: testP) => {
   const songsCopy = [...listState];
   const userSort = () => {
     curr = 'user'
@@ -97,5 +97,5 @@ const Genre = ({ listState, setList, reverse }: testP) => {
   );
 };
 
-const out =[Name, Artist, Genre,User, Likes];
+const out =[Name, Artist, Genre,Uploader, Likes];
 export default out

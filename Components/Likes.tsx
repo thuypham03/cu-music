@@ -2,12 +2,14 @@ import {} from "react";
 import { Button, Icon } from "@chakra-ui/react";
 import { Song } from "../types/index";
 import { Dispatch, SetStateAction } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../util/firebase";
 
 type Prop = {
   song: Song;
-  userLikedSongs: Song[];
+  userLikedSongs: string[];
   liked:boolean,
-  setUserLikedSongs: Dispatch<SetStateAction<Song[]>>;
+  setUserLikedSongs: Dispatch<SetStateAction<string[]>>;
 };
 
 export default function Liking({
@@ -20,16 +22,19 @@ export default function Liking({
   const updateLiked = () => {
     
     if (liked) {//unlike song
-      const temp: Song[] = [...userLikedSongs];
-      const index: number = userLikedSongs.indexOf(song);
-      temp.splice(index, 1);
       song.likes--
+      const temp: string[] = [...userLikedSongs];
+      const index: number = userLikedSongs.indexOf(song.id);
+      temp.splice(index, 1);
+      updateDoc(doc(db, 'songs',song.id),{likes: song.likes})
       setUserLikedSongs(temp);
       
     } else {//like song
-        const temp: Song[] = [...userLikedSongs, song];
-        setUserLikedSongs(temp);
+      // console.log(userLikedSongs)
         song.likes++
+        const temp: string[] = [...userLikedSongs, song.id];
+        updateDoc(doc(db, 'songs', song.id), {likes:song.likes})
+        setUserLikedSongs(temp);
     }
   };
 
