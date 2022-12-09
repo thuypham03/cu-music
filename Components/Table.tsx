@@ -16,8 +16,8 @@ import { dummySongs, currUser } from "../scripts/temp";
 import { PrimitiveSong, Song, User } from "../types";
 import out from "./Sorter";
 import Liking from "./Likes";
-import {collection, doc, getDoc, onSnapshot, query} from 'firebase/firestore'
-import {db, songsCollectionRef, usersCollectionRef} from '../util/firebase'
+import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
+import { db, songsCollectionRef, usersCollectionRef } from "../util/firebase";
 import { Dispatch, SetStateAction } from "react";
 
 const [Name, Artist, Genre, Uploader, Likes] = out;
@@ -42,10 +42,9 @@ const LaySong = (
 
   const { name, artist, genre, userId, link, likes } = song;
 
-
   //search for the user with the given id to set as uploader. Guaranteed to work
   //since only users can upload
-  const uploader = uploaders.find((data)=>data.id===userId)
+  const uploader = uploaders.find((data) => data.id === userId);
 
   return (
     <Tr key={name + artist}>
@@ -57,7 +56,7 @@ const LaySong = (
       </Td>
       <Td>{artist}</Td>
       <Td>{genre}</Td>
-      <Td>{userId==='Admin'? 'Admin': uploader?.name}</Td>
+      <Td>{userId === "Admin" ? "Admin" : uploader?.name}</Td>
       <Td>
         <Liking
           song={song}
@@ -72,9 +71,8 @@ const LaySong = (
 };
 
 const MyTable = () => {
-  
-  //for getting the uploader of a song 
-  const [uploaders, setUploaders] = useState<User[]>([])
+  //for getting the uploader of a song
+  const [uploaders, setUploaders] = useState<User[]>([]);
 
   //React hooks on current user's songlist for liking a song.
   const [userLikedSongs, setUserLikedSongs] = useState<string[]>(
@@ -87,24 +85,36 @@ const MyTable = () => {
   const [songList, setSongList] = useState<Song[]>([]);
 
   //Get songs from database
-    const converttoSong = (data:any, id:string)=>{return {...data as PrimitiveSong, id:id}}
-    useEffect(()=>{
-      const unsubscribe = onSnapshot(query(songsCollectionRef),(querySnapshot)=>{
-        setSongList(querySnapshot.docs.map((data)=>converttoSong(data.data(), data.id)))
-      })
-       return unsubscribe
-    }, [])
+  const converttoSong = (data: any, id: string) => {
+    return { ...(data as PrimitiveSong), id: id };
+  };
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(songsCollectionRef),
+      (querySnapshot) => {
+        setSongList(
+          querySnapshot.docs.map((data) => converttoSong(data.data(), data.id))
+        );
+      }
+    );
+    return unsubscribe;
+  }, []);
 
   //Get uploaders
-  const converttoUser = (data:any)=>{return {...data as User}}
-  useEffect(()=>{
-    const unsubscribe = onSnapshot(query(usersCollectionRef), (querySnapShot)=>{
-      setUploaders(
-        querySnapShot.docs.map(data=>converttoUser(data.data()))
-      )
-    })
-    return unsubscribe
-  }, [])
+  const converttoUser = (data: any) => {
+    return { ...(data as User) };
+  };
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(usersCollectionRef),
+      (querySnapShot) => {
+        setUploaders(
+          querySnapShot.docs.map((data) => converttoUser(data.data()))
+        );
+      }
+    );
+    return unsubscribe;
+  }, []);
 
   const songListRef = useRef<JSX.Element[]>();
   songListRef.current = songList.map((data) =>

@@ -7,9 +7,7 @@ export type PrimitiveSong = {
     likes: number
 }
 
-export type Song = PrimitiveSong & { id:string
-    
-}
+export type Song = PrimitiveSong & { id:string}
 
 export type User = {
     id: string // user.uid of AuthUser
