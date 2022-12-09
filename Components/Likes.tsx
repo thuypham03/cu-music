@@ -8,7 +8,7 @@ import { db } from "../util/firebase";
 type Prop = {
   song: Song;
   userLikedSongs: string[];
-  liked:boolean,
+  liked: boolean;
   setUserLikedSongs: Dispatch<SetStateAction<string[]>>;
 };
 
@@ -18,28 +18,33 @@ export default function Liking({
   liked,
   setUserLikedSongs,
 }: Prop) {
-
   const updateLiked = () => {
-    
-    if (liked) {//unlike song
-      song.likes--
+    if (liked) {
+      //unlike song
+      song.likes--;
       const temp: string[] = [...userLikedSongs];
       const index: number = userLikedSongs.indexOf(song.id);
       temp.splice(index, 1);
-      updateDoc(doc(db, 'songs',song.id),{likes: song.likes})
+      updateDoc(doc(db, "songs", song.id), { likes: song.likes });
       setUserLikedSongs(temp);
-      
-    } else {//like song
+    } else {
+      //like song
       // console.log(userLikedSongs)
-        song.likes++
-        const temp: string[] = [...userLikedSongs, song.id];
-        updateDoc(doc(db, 'songs', song.id), {likes:song.likes})
-        setUserLikedSongs(temp);
+      song.likes++;
+      const temp: string[] = [...userLikedSongs, song.id];
+      updateDoc(doc(db, "songs", song.id), { likes: song.likes });
+      setUserLikedSongs(temp);
     }
   };
 
   return (
-    <Button variant="ghost" size="sm" my="2px" onClick={updateLiked} key={song.name+song.artist+"LikeButton"}>
+    <Button
+      variant="ghost"
+      size="sm"
+      my="2px"
+      onClick={updateLiked}
+      key={song.name + song.artist + "LikeButton"}
+    >
       <Icon viewBox="0 0 128 128" color="red.500">
         {liked ? (
           <path
