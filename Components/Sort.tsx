@@ -1,5 +1,8 @@
 import { Song } from "../types";
 
+
+
+
 const sortLikes = (array: Song[], reverse: boolean = false) => {
   if (reverse) {
     array.sort((a, b) => b.likes - a.likes);
@@ -9,22 +12,33 @@ const sortLikes = (array: Song[], reverse: boolean = false) => {
 };
 
 const sortUser = (array: Song[], reverse: boolean = false) => {
+  const sortHelper = (a: Song, b: Song) => {
+    if (a.userId.toLowerCase() < b.userId.toLowerCase()) return -1;
+    if (a.userId.toLowerCase() > b.userId.toLowerCase()) return 1;
+    return 0;
+  };
+  const sortHelperReverse = (a: Song, b: Song) => {
+    if (a.userId.toLowerCase() < b.userId.toLowerCase()) return 1;
+    if (a.userId.toLowerCase() > b.userId.toLowerCase()) return -1;
+    return 0;
+  };
+  
   if (reverse) {
-    array.sort((a, b) => b.user.id - a.user.id);
+    array.sort(sortHelperReverse);
   } else {
-    array.sort((a, b) => a.user.id - b.user.id);
+    array.sort(sortHelper);
   }
 };
 
 const sortArtist = (array: Song[], reverse: boolean = false) => {
   const sortHelper = (a: Song, b: Song) => {
-    if (a.artist < b.artist) return -1;
-    if (a.artist > b.artist) return 1;
+    if (a.artist.toLowerCase() < b.artist.toLowerCase()) return -1;
+    if (a.artist.toLowerCase() > b.artist.toLowerCase()) return 1;
     return 0;
   };
   const sortHelperReverse = (a: Song, b: Song) => {
-    if (a.artist < b.artist) return 1;
-    if (a.artist > b.artist) return -1;
+    if (a.artist.toLowerCase() < b.artist.toLowerCase()) return 1;
+    if (a.artist.toLowerCase() > b.artist.toLowerCase()) return -1;
     return 0;
   };
   if (reverse) {
@@ -36,13 +50,13 @@ const sortArtist = (array: Song[], reverse: boolean = false) => {
 
 const sortName = (array: Song[], reverse: boolean = false) => {
   const sortHelper = (a: Song, b: Song) => {
-    if (a.name < b.name) return -1;
-    if (a.name > b.name) return 1;
+    if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+    if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
     return 0;
   };
   const sortHelperReverse = (a: Song, b: Song) => {
-    if (a.name < b.name) return 1;
-    if (a.name > b.name) return -1;
+    if (a.name.toLowerCase() < b.name.toLowerCase()) return 1;
+    if (a.name.toLowerCase() > b.name.toLowerCase()) return -1;
     return 0;
   };
   if (reverse) {
@@ -54,13 +68,13 @@ const sortName = (array: Song[], reverse: boolean = false) => {
 
 const sortGenre = (array: Song[], reverse: boolean = false) => {
   const sortHelper = (a: Song, b: Song) => {
-    if (a.genre < b.genre) return -1;
-    if (a.genre > b.genre) return 1;
+    if (a.genre.toLowerCase() < b.genre.toLowerCase()) return -1;
+    if (a.genre.toLowerCase() > b.genre.toLowerCase()) return 1;
     return 0;
   };
   const sortHelperReverse = (a: Song, b: Song) => {
-    if (a.genre < b.genre) return 1;
-    if (a.genre > b.genre) return -1;
+    if (a.genre.toLowerCase() < b.genre.toLowerCase()) return 1;
+    if (a.genre.toLowerCase() > b.genre.toLowerCase()) return -1;
     return 0;
   };
   if (reverse) {
