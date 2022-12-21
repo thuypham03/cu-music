@@ -12,34 +12,49 @@ import {
 
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { useState, useEffect, useRef } from "react";
-import { dummySongs, currUser } from "../scripts/temp";
 import { PrimitiveSong, Song, User } from "../types";
 import out from "./Sorter";
 import Liking from "./Likes";
-import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
-import { db, songsCollectionRef, usersCollectionRef } from "../util/firebase";
+import { onSnapshot, query } from "firebase/firestore";
+import { songsCollectionRef, usersCollectionRef } from "../util/firebase";
 import { Dispatch, SetStateAction } from "react";
+import { useAuth } from "./auth/AuthUserProvider";
 
 const [Name, Artist, Genre, Uploader, Likes] = out;
 
 /**
- * Fills out each row of the table with the songs. Child component, `Liking`, handles liking songs with react hooks and a reference to the current user
+ * Fills out each row of the table with the songs.
+ * Child component, `Liking`, handles liking songs with react
+ * hooks and a reference to the current user id
+ * @param song the Song occupying a row
+ * @param userLikedSongs the list of songs the user likes. May be undefined
+ * @param setUserLikedSongs setter for the user's liked songs
+ * @param uploaders All uploaders of songs
+ * @currentUserId the string id of the current user. May be undefined
+ * @returns JSX Element wrapping for each song row.
  */
-const LaySong = (
+const WrapSong = (
   song: Song,
   userLikedSongs: string[] | undefined,
   setUserLikedSongs: Dispatch<SetStateAction<string[]>>,
-  uploaders: User[]
+  uploaders: User[],
+  currentUserId: string | undefined
 ) => {
-  //A reference object of the current user's liked songs needs to be used. but that reference could be undefined. This makes sure the function
+  //A reference object of the current user's liked songs needs to be used.
+  //but that reference could be undefined. This makes sure the function
   //always has a list to work with.
   if (userLikedSongs === undefined) {
     userLikedSongs = [];
   }
+  //similar to the explanation above but for currentUserId
+  if (currentUserId === undefined) {
+    currentUserId = "";
+  }
 
+  //Whether the song has been liked by the current user.
   //For use in the child component
   const liked = userLikedSongs.includes(song.id);
-
+  //unpack song
   const { name, artist, genre, userId, link, likes } = song;
 
   //search for the user with the given id to set as uploader. Guaranteed to work
@@ -49,9 +64,12 @@ const LaySong = (
   return (
     <Tr key={name + artist}>
       <Td>
-        <Link href={link} isExternal>
-          {name}
-          <ExternalLinkIcon mx="2px"></ExternalLinkIcon>
+        <Link
+          href={link}
+          isExternal
+          _hover={{ color: "blue", textDecoration: "underline" }}
+        >
+          {name} <ExternalLinkIcon mx="2px"></ExternalLinkIcon>
         </Link>
       </Td>
       <Td>{artist}</Td>
@@ -60,29 +78,40 @@ const LaySong = (
       <Td>
         <Liking
           song={song}
-          userLikedSongs={userLikedSongs}
           liked={liked}
+          userLikedSongs={userLikedSongs}
           setUserLikedSongs={setUserLikedSongs}
+          currentUserId={currentUserId}
         />
         {likes}
       </Td>
     </Tr>
   );
 };
-
+/**
+ * Component for the table on the main page.
+ * @returns JSX Elements for the entire table
+ */
 const MyTable = () => {
+  //User from Auth. to be used to grab current user's data
+  const { user } = useAuth();
+  //State for current user
+  const [currentUser, setCurrentUser] = useState<User>();
+
+  //the list of songs
+  const [songList, setSongList] = useState<Song[]>([]);
+
   //for getting the uploader of a song
   const [uploaders, setUploaders] = useState<User[]>([]);
 
   //React hooks on current user's songlist for liking a song.
-  const [userLikedSongs, setUserLikedSongs] = useState<string[]>(
-    currUser.likedSongs
-  );
+  const [userLikedSongs, setUserLikedSongs] = useState<string[]>([]);
+  //Reference for current user's liked songs
   const userLikedRef = useRef<string[]>(); //Reference for current user's liked songs
   userLikedRef.current = userLikedSongs;
 
-  //the list of songs
-  const [songList, setSongList] = useState<Song[]>([]);
+  //Used later on to prevent unneccessary re-rendering
+  const [flag, setFlag] = useState<boolean>(false);
 
   //Get songs from database
   const converttoSong = (data: any, id: string) => {
@@ -92,13 +121,18 @@ const MyTable = () => {
     const unsubscribe = onSnapshot(
       query(songsCollectionRef),
       (querySnapshot) => {
-        setSongList(
-          querySnapshot.docs.map((data) => converttoSong(data.data(), data.id))
-        );
+        if (!flag) {
+          setSongList(
+            querySnapshot.docs.map((data) =>
+              converttoSong(data.data(), data.id)
+            )
+          );
+        }
+        setFlag(true);
       }
     );
     return unsubscribe;
-  }, []);
+  }, [flag]);
 
   //Get uploaders
   const converttoUser = (data: any) => {
@@ -116,17 +150,48 @@ const MyTable = () => {
     return unsubscribe;
   }, []);
 
-  const songListRef = useRef<JSX.Element[]>();
-  songListRef.current = songList.map((data) =>
-    LaySong(data, userLikedRef.current, setUserLikedSongs, uploaders)
-  );
+  //Get current User and user's liked songs
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(usersCollectionRef),
+      (querySnapShot) => {
+        const temp = querySnapShot.docs.find(
+          (data) => data.data().id == user?.uid
+        );
+        const tempUser = converttoUser(temp?.data());
+        setCurrentUser(tempUser);
+        setUserLikedSongs(tempUser.likedSongs);
+      }
+    );
+    return unsubscribe;
+  }, [user]);
 
+  //reference for each song row after wrapping with JSX elements
+  const wrapedSongsRef = useRef<JSX.Element[]>();
+  //initial wrapping of song rows
+  wrapedSongsRef.current = songList.map((data) =>
+    WrapSong(
+      data,
+      userLikedRef.current,
+      setUserLikedSongs,
+      uploaders,
+      currentUser?.id
+    )
+  );
+  //for re-rendering when the song list(including its order), user's liked songs, uploaders
+  //or current user changes
   useEffect(() => {
     userLikedRef.current = userLikedSongs;
-    songListRef.current = songList.map((data) =>
-      LaySong(data, userLikedRef.current, setUserLikedSongs, uploaders)
+    wrapedSongsRef.current = songList.map((data) =>
+      WrapSong(
+        data,
+        userLikedRef.current,
+        setUserLikedSongs,
+        uploaders,
+        currentUser?.id
+      )
     );
-  }, [songList, userLikedSongs, uploaders]); //Re-render whenever the song list or the user's liked songs changes
+  }, [songList, userLikedSongs, uploaders, currentUser]); //Re-render whenever the song list or the user's liked songs changes
 
   return (
     <TableContainer w="100%">
@@ -142,7 +207,7 @@ const MyTable = () => {
               />
             </Th>
             <Th>
-              Artist
+              Artist{" "}
               <Artist
                 listState={songList}
                 setList={setSongList}
@@ -150,7 +215,7 @@ const MyTable = () => {
               />
             </Th>
             <Th>
-              Genre
+              Genre{" "}
               <Genre
                 listState={songList}
                 setList={setSongList}
@@ -158,7 +223,7 @@ const MyTable = () => {
               />
             </Th>
             <Th>
-              Uploaded by
+              Uploaded by{" "}
               <Uploader
                 listState={songList}
                 setList={setSongList}
@@ -166,7 +231,7 @@ const MyTable = () => {
               />
             </Th>
             <Th>
-              Likes
+              Likes{" "}
               <Likes
                 listState={songList}
                 setList={setSongList}
@@ -175,7 +240,7 @@ const MyTable = () => {
             </Th>
           </Tr>
         </Thead>
-        <Tbody>{songListRef.current}</Tbody>
+        <Tbody>{wrapedSongsRef.current}</Tbody>
         <Tfoot></Tfoot>
       </Table>
     </TableContainer>

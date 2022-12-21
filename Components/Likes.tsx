@@ -7,42 +7,75 @@ import { db } from "../util/firebase";
 
 type Prop = {
   song: Song;
-  userLikedSongs: string[];
   liked: boolean;
+  userLikedSongs: string[];
   setUserLikedSongs: Dispatch<SetStateAction<string[]>>;
+  currentUserId: string;
 };
 
+/**Handles liking functionality
+ * @param song: The Song being liked or unliked
+ * @param song: boolean of whether the song is currently liked
+ * @param userLikedSongs: list of all songs liked by the current user
+ * @param setUserLikedSongs: setter for the user's liked songs
+ * @param currentUserId: the id of the current user
+ *
+ * @returns JSX element for the like button of the Song
+ */
 export default function Liking({
   song,
-  userLikedSongs,
   liked,
+  userLikedSongs,
   setUserLikedSongs,
+  currentUserId,
 }: Prop) {
-  const updateLiked = () => {
+  /**
+   * Updates the like state of a song, modifying the user's liked song
+   * the database as well.
+   * Precondition: The user must be signed in
+   */
+  const updateLike = () => {
+    //temporary copy of user's liked songs to be stored here
+    let temp: string[];
     if (liked) {
       //unlike song
+      //reduce like count
       song.likes--;
-      const temp: string[] = [...userLikedSongs];
+      //create temporary copy of the user's liked songs
+      temp = [...userLikedSongs];
+      //find the index of to remove the song from
       const index: number = userLikedSongs.indexOf(song.id);
+      //remove song
       temp.splice(index, 1);
-      updateDoc(doc(db, "songs", song.id), { likes: song.likes });
+      //update the local copy of user's liked songs
       setUserLikedSongs(temp);
     } else {
       //like song
-      // console.log(userLikedSongs)
+      //increase like count of song
       song.likes++;
-      const temp: string[] = [...userLikedSongs, song.id];
-      updateDoc(doc(db, "songs", song.id), { likes: song.likes });
+      //Create temporary copy of user's liked song, adding this song
+      //to the end
+      temp = [...userLikedSongs, song.id];
+      //update the local copy of users liked songs
       setUserLikedSongs(temp);
     }
+    //update the song database
+    updateDoc(doc(db, "songs", song.id), { likes: song.likes });
+    //update the user's database
+    updateDoc(doc(db, "users", currentUserId), { likedSongs: temp });
   };
 
+  /** Alerts a user when they try to like a song without first being logged in*/
+  const denial = () => {
+    alert("You need to sign in to like or unlike a song!");
+  };
+  //like button
   return (
     <Button
       variant="ghost"
       size="sm"
       my="2px"
-      onClick={updateLiked}
+      onClick={currentUserId ? updateLike : denial}
       key={song.name + song.artist + "LikeButton"}
     >
       <Icon viewBox="0 0 128 128" color="red.500">
