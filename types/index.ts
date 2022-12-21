@@ -9,12 +9,15 @@ export type PrimitiveSong = {
 
 export type Song = PrimitiveSong & { id:string}
 
+//Songs exist in the database as primitive songs. When fetched, they're converted to 
+//the Song type.
+
 export type User = {
     id: string // user.uid of AuthUser
     name: string // user.displayName of AuthUser
-    uploads: Song[]
+    uploads: string[] //song ids
     likes: number
     likedSongs: string[]
-    followers: User[]
-    following: User[]
+    followers: string[] //user ids
+    following: string[] //user ids
 }

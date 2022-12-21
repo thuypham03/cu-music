@@ -1,3 +1,4 @@
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Box, Divider, Text, Link } from "@chakra-ui/react";
 import React from "react";
 
@@ -10,7 +11,7 @@ const Footer = () => (
         href="https://www.linkedin.com/in/george-maidhof-70ab13249/"
         isExternal
       >
-        George
+        George <ExternalLinkIcon boxSize={3}></ExternalLinkIcon>
       </Link>
       ,{" "}
       <Link
@@ -18,7 +19,7 @@ const Footer = () => (
         href="https://www.linkedin.com/in/thuypham03/"
         isExternal
       >
-        Thuy
+        Thuy <ExternalLinkIcon boxSize={3}></ExternalLinkIcon>
       </Link>{" "}
       &{" "}
       <Link
@@ -26,7 +27,7 @@ const Footer = () => (
         href="https://www.linkedin.com/in/emmanuel-dodoo-b97108231/"
         isExternal
       >
-        Emmanuel.
+        Emmanuel <ExternalLinkIcon boxSize={3}></ExternalLinkIcon>
       </Link>{" "}
       Powered by{" "}
       <Link
@@ -34,7 +35,7 @@ const Footer = () => (
         href="https://chakra-ui.com/"
         isExternal
       >
-        Chakra-ui
+        Chakra-ui <ExternalLinkIcon boxSize={3}></ExternalLinkIcon>
       </Link>
     </Text>
   </Box>
