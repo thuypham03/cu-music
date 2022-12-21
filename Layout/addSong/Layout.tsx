@@ -164,6 +164,8 @@ const AddSongLayout = () => {
     try {
       //if song doesn't exist already and there's a user present
       if (!songExists(name, artist, songList, setErrorFlag) && currentUser) {
+        //To prevent the SignIn Error from persisting
+        setSignInFlag(false)
         //Make a new primitiveSong
         const newSong: PrimitiveSong = {
           name: name.trim(),
