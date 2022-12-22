@@ -1,7 +1,7 @@
 import { Heading, Center } from "@chakra-ui/react";
 import Footer from "../Layout/Footer";
 import Layout from "../Layout/Layout";
-import AddSongLayout from "../Layout/addSong/Layout";
+import AddSongLayout from "../Components/addSong/Layout";
 
 const AddSong= () =>(
     <>
