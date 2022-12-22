@@ -1,7 +1,16 @@
 import NextLink from "next/link";
-import { Box, Button, HStack, Link, Text, Flex, Spacer, Image } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Link,
+  Text,
+  Flex,
+  Spacer,
+  Image,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { signInWithGoogle } from '../util/firebase';
+import { signInWithGoogle } from "../util/firebase";
 import { useAuth } from "../Components/auth/AuthUserProvider";
 import { addNewUser } from "../Components/AddUser";
 
@@ -18,16 +27,16 @@ const navigations: NavLinkData[] = [
   },
   {
     name: "Generator",
-    path: "/generatorPage"
+    path: "/generatorPage",
   },
   {
     name: "Profile",
-    path: "/userProfile"
-  }
+    path: "/userProfile",
+  },
 ];
 
 //Styling and linking
-const NavLink = ({ name, path }: NavLinkData) => {  
+const NavLink = ({ name, path }: NavLinkData) => {
   return (
     <NextLink key={path} href={path} passHref legacyBehavior>
       <Link _hover={{ textDecoration: "none" }} tabIndex={-1}>
@@ -44,35 +53,67 @@ const NavLink = ({ name, path }: NavLinkData) => {
   );
 };
 
-type Prop={
-  showLogin:boolean
-}
+type Prop = {
+  showLogin: boolean;
+};
 
-const Navbar = ({showLogin}:Prop) => {
-  const { user, signOut } = useAuth()
-  if (user) addNewUser(user.uid, user.displayName)
+const Navbar = ({ showLogin }: Prop) => {
+  const { user, signOut } = useAuth();
+  if (user) addNewUser(user.uid, user.displayName);
 
   return (
     <Flex shadow="base">
-      <Box px={10} >
+      <Box px={10}>
         <HStack justifyContent={"space-between"}>
           <HStack h={14} as="nav" spacing={14} alignItems="center">
-            {navigations.map((data) => (
-              data.name == "Profile" && !user ? null : <NavLink key={data.path}{...data}/>
-            ))}
+            {navigations.map((data) =>
+              data.name == "Profile" && !user ? null : (
+                <NavLink key={data.path} {...data} />
+              )
+            )}
           </HStack>
         </HStack>
       </Box>
       <Spacer />
 
-      <Box alignSelf='flex-end' px={10}>
-      <HStack justifyContent={"space-between"} h={14} as="nav" spacing={4} alignItems="center">
-          {user && <>
-            <HStack>
-              <Image boxSize="40px" borderRadius="full" src="cornell-logo.png" alt="User Image" />
-              <Text>{user.displayName}</Text>
-            </HStack>
-          </>}
+      <Box alignSelf="flex-end" px={10}>
+        <HStack
+          justifyContent={"space-between"}
+          h={14}
+          as="nav"
+          spacing={4}
+          alignItems="center"
+        >
+          {user && (
+            <>
+              <HStack>
+                <Image
+                  boxSize="40px"
+                  borderRadius="full"
+                  src={user.photoURL ? user.photoURL : "cornell-logo.png"}
+                  alt="User Image"
+                />
+
+                <NextLink
+                  href={"/userProfile"}
+                  key={"/userProfile"}
+                  passHref
+                  legacyBehavior
+                >
+                  <Link _hover={{ textDecoration: "none" }} tabIndex={-1}>
+                    <Button
+                      _focusVisible={{ shadow: "outline" }}
+                      _focus={{ shadow: "none" }}
+                      colorScheme={"messenger"}
+                      variant={"link"}
+                    >
+                      {user.displayName}
+                    </Button>
+                  </Link>
+                </NextLink>
+              </HStack>
+            </>
+          )}
           <Button
             _focusVisible={{ shadow: "outline" }}
             _focus={{ shadow: "none" }}
