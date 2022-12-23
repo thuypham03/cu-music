@@ -10,10 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types";
-import Followers from "./Followers";
-import Following from "./Following";
-import LikedSongs from "./LikedSongs";
-import Uploads from "./Uploads";
+import Account from "./Account/Account";
+import Followers from "./Followers/Followers";
+import Following from "./Following/Following";
+import LikedSongs from "./LikedSongs/LikedSongs";
+import Uploads from "./Uploads/Uploads";
 
 type Prop = {
   currentUser: User;
@@ -24,9 +25,8 @@ const buttonMaker = (
   setActiveOption: Dispatch<SetStateAction<string>>
 ) => {
   const helper = (data: string, index: number, arr: string[]) => (
-    <>
+    <Box key={data + "button"}>
       <Button
-        key={data + "button"}
         size="lg"
         p=""
         mx="10"
@@ -42,7 +42,7 @@ const buttonMaker = (
         {data}
       </Button>
       {index < arr.length - 1 ? <Divider orientation="horizontal" /> : <></>}
-    </>
+    </Box>
   );
 
   const list = ["Uploads", "Liked Songs", "Followers", "Following", "Account"];
@@ -53,6 +53,17 @@ const buttonMaker = (
 const Options = ({ currentUser }: Prop) => {
   const [activeOption, setActiveOption] = useState<string>("");
 
+  const inactive = () => (
+    <Box p="200">
+      <Center>
+        <Text alignSelf="center" fontWeight="semibold" fontSize="2xl">
+          {" "}
+          Select an Option
+        </Text>
+      </Center>
+    </Box>
+  );
+
   const dislayActiveOption = () => {
     switch (activeOption) {
       case "Uploads":
@@ -62,17 +73,12 @@ const Options = ({ currentUser }: Prop) => {
       case "Followers":
         return <Followers currentUser={currentUser} />;
       case "Following":
-        return <Following currentUser={currentUser}/>
+        return <Following currentUser={currentUser} />;
+      case "Account":
+        return <Account currentUser={currentUser} />;
 
       default:
-        return (
-          <Center>
-            <Text alignSelf="center" fontSize="2xl">
-              {" "}
-              Select an Option
-            </Text>
-          </Center>
-        );
+        return inactive();
     }
   };
 

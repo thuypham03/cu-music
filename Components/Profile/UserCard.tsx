@@ -19,7 +19,7 @@ type Prop = {
 const UserCard = ({ currentUser }: Prop) => {
   const { user } = useAuth();
   return (
-    <Card variant="elevated">
+    <Card key="UserCard" variant="elevated">
       <CardBody>
         <Center>
           <HStack
@@ -36,7 +36,7 @@ const UserCard = ({ currentUser }: Prop) => {
             />
             <Spacer />
             <VStack>
-              <Heading>{user?.displayName}</Heading>
+              <Heading>{currentUser?.name}</Heading>
               <HStack>
                 <Text fontSize="lg">
                   Likes : {currentUser ? currentUser.likes : 0}

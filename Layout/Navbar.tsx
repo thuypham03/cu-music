@@ -10,9 +10,12 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { signInWithGoogle } from "../util/firebase";
+import { signInWithGoogle, usersCollectionRef } from "../util/firebase";
 import { useAuth } from "../Components/auth/AuthUserProvider";
 import { addNewUser } from "../Components/AddUser";
+import { useEffect, useState } from "react";
+import { User } from "../types";
+import { onSnapshot, query } from "firebase/firestore";
 
 type NavLinkData = {
   name: string;
@@ -61,6 +64,22 @@ const Navbar = ({ showLogin }: Prop) => {
   const { user, signOut } = useAuth();
   if (user) addNewUser(user.uid, user.displayName);
 
+  //Decided to put this in here so a user can customise their name.
+  //Instead of using information about the name from Google, we use the one
+  //in the database
+  const [currentUser, setCurrentUser] = useState<User>();
+
+  useEffect(() => {
+    const convertToUser = (data: any) => {
+      return { ...(data as User) };
+    };
+    const unsubscribe = onSnapshot(query(usersCollectionRef), (qS) => {
+      const temp = qS.docs.find((data) => data.id === user?.uid);
+      setCurrentUser(convertToUser(temp?.data()));
+    });
+    return unsubscribe;
+  }, [user]);
+
   return (
     <Flex shadow="base">
       <Box px={10}>
@@ -107,7 +126,7 @@ const Navbar = ({ showLogin }: Prop) => {
                       colorScheme={"messenger"}
                       variant={"link"}
                     >
-                      {user.displayName}
+                      {currentUser?.name}
                     </Button>
                   </Link>
                 </NextLink>
