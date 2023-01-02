@@ -37,6 +37,7 @@ const createComponentWithAuth = withFirebaseAuth({
 
 const signInWithGoogle = () => {
   signInWithPopup(auth, providers.googleProvider)
+    .catch(()=>alert("Only signed in users can add songs"))
 }
 
 const signOutFirebase = () => {
