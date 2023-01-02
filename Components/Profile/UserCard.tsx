@@ -36,16 +36,22 @@ const UserCard = ({ currentUser }: Prop) => {
             />
             <Spacer />
             <VStack>
-              <Heading>{currentUser?.name}</Heading>
+              <Heading>{currentUser ? currentUser.name : ""}</Heading>
               <HStack>
                 <Text fontSize="lg">
                   Likes : {currentUser ? currentUser.likes : 0}
                 </Text>
                 <Text fontSize="lg">
-                  Followers: {currentUser ? currentUser.followers.length : 0}
+                  Followers:{" "}
+                  {currentUser && currentUser.followers
+                    ? currentUser.followers.length
+                    : 0}
                 </Text>
                 <Text fontSize="lg">
-                  Following: {currentUser ? currentUser.following.length : 0}
+                  Following:{" "}
+                  {currentUser && currentUser.following
+                    ? currentUser.following.length
+                    : 0}
                 </Text>
               </HStack>
             </VStack>
