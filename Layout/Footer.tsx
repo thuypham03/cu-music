@@ -3,7 +3,7 @@ import { Box, Divider, Text, Link } from "@chakra-ui/react";
 import React from "react";
 
 const Footer = () => (
-  <Box as="footer" px={4}>
+  <Box as="footer" px={4} style={{position:'fixed', bottom:10, left:'33.33%'}}>
     <Divider my={4} />
     <Text fontSize="md" color="subtle" align="center">
       <Link
