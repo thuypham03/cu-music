@@ -8,11 +8,8 @@ const test = () => (
   <>
     <Layout title="Home" showLogin={true}>
       <Heading color="tomato" size="2xl" my="4">
-        Big Red Music Test
+        Big Red Musix
       </Heading>
-      <Text fontSize="md" my="3">
-        This is a test landing page for the final project
-      </Text>
     </Layout>
     <MyTable />
     <AddSong />
