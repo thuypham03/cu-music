@@ -15,6 +15,7 @@ import {
   songsCollectionRef,
   usersCollectionRef,
 } from "../../util/firebase";
+import { genres } from "../../util/genres";
 import { Error } from "./Error";
 import { GenreAlert } from "./GenreAlert";
 import { Genre } from "./Genres";
@@ -147,7 +148,7 @@ const AddSongLayout = () => {
   const [genre, setGenre] = useState("");
   //I should probably pass this as an argument to the function.
   //For now though, this is a placeholder
-  const genreList: string[] = ["Pop", "Classical", "Western"];
+  const genreList: string[] = genres;
 
   //Handle submission of form
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -165,7 +166,7 @@ const AddSongLayout = () => {
       //if song doesn't exist already and there's a user present
       if (!songExists(name, artist, songList, setErrorFlag) && currentUser) {
         //To prevent the SignIn Error from persisting
-        setSignInFlag(false)
+        setSignInFlag(false);
         //Make a new primitiveSong
         const newSong: PrimitiveSong = {
           name: name.trim(),
