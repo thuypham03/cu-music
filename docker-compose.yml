@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  cu-music:
+    image: end25/cu-music:v1.0
+    ports:
+      - "80:3000"
