@@ -8,14 +8,21 @@ import {
 } from "firebase/auth"
 import withFirebaseAuth from "react-with-firebase-auth"
 
+const apikey = process.env.REACT_APP_APIKEY;
+const appId = process.env.REACT_APP_APPID;
+const authDomain = process.env.REACT_APP_AUTHDOMAIN;
+const projectId = process.env.REACT_APP_PROJECT_ID;
+const storageBucket = process.env.REACT_APP_STORAGE_BUCKET;
+const messagingSenderId = process.env.REACT_APP_MESSAGING_SENDER_ID;
+
 // TODO: Replace with your own Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDhUwVyZ9GryliVm2Enht9nMknh_8T_zEA",
-  authDomain: "cu-music.firebaseapp.com",
-  projectId: "cu-music",
-  storageBucket: "cu-music.appspot.com",
-  messagingSenderId: "1076834371330",
-  appId: "1:1076834371330:web:bd15870a489834e157e41b",
+  apiKey: `${apikey}`,
+  authDomain: `${authDomain}`,
+  projectId: `cu-music`,
+  storageBucket: `${storageBucket}`,
+  messagingSenderId: `${messagingSenderId}`,
+  appId: `${appId}`,
   measurementId: "G-Y4GMEMMPTG"
 };
 
