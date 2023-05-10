@@ -22,7 +22,7 @@ type Props = {
 
 export default function DeleteAccount({ currentUser }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   // to delete the user
   const { user } = useAuth();
@@ -60,7 +60,10 @@ export default function DeleteAccount({ currentUser }: Props) {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+            >
               Delete Account
             </AlertDialogHeader>
             <AlertDialogBody>
@@ -76,7 +79,11 @@ export default function DeleteAccount({ currentUser }: Props) {
               >
                 Delete Account
               </Button>
-              <Button ref={cancelRef} onClick={onClose} ml={3}>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                ml={3}
+              >
                 Cancel
               </Button>
             </AlertDialogFooter>

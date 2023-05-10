@@ -43,7 +43,7 @@ export default function UnFollow({
     return unsubscribe;
   }, [followee]);
 
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   const unfollow = () => {
     const temp = [...following];
@@ -84,7 +84,10 @@ export default function UnFollow({
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+            >
               UnFollow
             </AlertDialogHeader>
             <AlertDialogBody>
@@ -100,7 +103,11 @@ export default function UnFollow({
               >
                 Unfollow
               </Button>
-              <Button ref={cancelRef} onClick={onClose} ml={3}>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                ml={3}
+              >
                 Cancel
               </Button>
             </AlertDialogFooter>

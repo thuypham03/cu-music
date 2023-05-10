@@ -30,7 +30,7 @@ export default function DeleteSong({
 }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   const delSong = () => {
     deleteDoc(doc(db, "songs", song.id)); //delete song from database
@@ -60,7 +60,10 @@ export default function DeleteSong({
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+            >
               DeleteSong?
             </AlertDialogHeader>
             <AlertDialogBody>
@@ -76,7 +79,11 @@ export default function DeleteSong({
               >
                 Delete
               </Button>
-              <Button ref={cancelRef} onClick={onClose} ml={3}>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                ml={3}
+              >
                 Cancel
               </Button>
             </AlertDialogFooter>

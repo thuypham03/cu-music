@@ -23,7 +23,7 @@ type Prop = {
 export default function ChangeName({ currentUser }: Prop) {
   const [newName, setNewName] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   const change = () => {
     updateDoc(doc(db, "users", currentUser.id), { name: newName.trim() });
@@ -39,7 +39,12 @@ export default function ChangeName({ currentUser }: Prop) {
         }}
       >
         <HStack>
-          <Text width="45%" fontSize="lg" mr="1.5" textColor="#006AFF">
+          <Text
+            width="45%"
+            fontSize="lg"
+            mr="1.5"
+            textColor="#006AFF"
+          >
             {" "}
             Update Name
           </Text>
@@ -85,7 +90,11 @@ export default function ChangeName({ currentUser }: Prop) {
               >
                 Update
               </Button>
-              <Button ref={cancelRef} onClick={onClose} ml={3}>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                ml={3}
+              >
                 Cancel
               </Button>
             </AlertDialogFooter>

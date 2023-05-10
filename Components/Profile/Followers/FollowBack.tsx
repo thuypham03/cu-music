@@ -45,7 +45,7 @@ export default function FollowBack({
     return unsubscribe;
   }, [follower]);
 
-  const cancelRef = useRef();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
 
   const updateFollowed = () => {
     let temp: User[];
@@ -108,7 +108,10 @@ export default function FollowBack({
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+            >
               UnFollow
             </AlertDialogHeader>
             <AlertDialogBody>
@@ -124,7 +127,11 @@ export default function FollowBack({
               >
                 Unfollow
               </Button>
-              <Button ref={cancelRef} onClick={onClose} ml={3}>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                ml={3}
+              >
                 Cancel
               </Button>
             </AlertDialogFooter>
